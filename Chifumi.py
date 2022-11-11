@@ -1,4 +1,4 @@
-## DEBUT
+### DEBUT
 
 # Admettre que la fonction input(str) avec comme paramètre facultatif str permet à l'utilisateur de renvoyer un string en retour de l'execution de cette fonction, str permet d'afficher un message devant l'interaction du Joueur
 # Admettre que la fonction randint(x, y) avec comme paramètre x et y permet de renvoyer un entier naturel aléatoire entre x compris et y compris en retour de l'execution de cette fonction
@@ -107,4 +107,4 @@
     # Sinon:
         # Executer la fonction print avec comme paramètre "Très bien, à bientôt\n"
 
-## FIN
+### FIN
