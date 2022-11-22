@@ -1,110 +1,139 @@
-### DEBUT
+from library import *
 
-# Admettre que la fonction input(str) avec comme paramètre facultatif str permet à l'utilisateur de renvoyer un string en retour de l'execution de cette fonction, str permet d'afficher un message devant l'interaction du Joueur
-# Admettre que la fonction randint(x, y) avec comme paramètre x et y permet de renvoyer un entier naturel aléatoire entre x compris et y compris en retour de l'execution de cette fonction
-# Admettre que la fonction cls() sans paramètre qui va effacer la console
-# Admettre que la fonction sleep(s) avec comme paramètre un nombre relatif nommé s, la fonction permet d'attendre s secondes avant de continuer l'execution
+languages = ["English", "French", "Japan latin", "Japan Hiragana", "Japan Katakana"]
+chifumi = [
+    ["Rock", "Pierre", "hi", "ひ", "ヒ"],
+    ["Paper", "Feuille", "fu", "ふ", "フ"],
+    ["Scissors", "Ciseaux", "mi", "み", "ミ"]
+]
 
-# Définir la fonction question avec comme paramètres un string nommé text et une liste nommé table et a comme valeur par défaut []
-    # Executer la fonction cls
+def play():
+    global chifumi
+    global languages
+    playing = 1
+    while playing == 1:
+        parameters = parameter()
+        playing = 0
+        while playing == 0:
+            playing = gameplay(parameters)
 
-    # Définir length au retour de l'exection len avec comme paramètre table
-    # Définir lengthStr au retour de l'execution de la fonction str avec comme paramètre (length - 1)
-    # Si length est supérieur à 0
-        # Alors:
-        # Définir lengthList au retour de l'execution range avec comme paramètre length
+def parameter():
+    nbrPlayer = 2 + (question("Do you want to play with a bot ?", ["Yes","No"], 1) - 1)
 
-    # Définir reponsePossible à "\nRéponse possible:\n"
-    # Pour i commence à zero, s'incremente de 1 à chaque itération, et continue tant que i est inférieur à length
-        # Alors:
-        # Définir reponsePossible à la concaténation de reponsePossible, de '(', du retour de la fonction str avec comme paramètre i, de ") ", de l'élément en index i dans la liste table, et de "\n"
+    cls()
+    if question("Use the default key ?", ["Yes","No"]) == 0:
+        question("The default key for player 1 is 'q' for " + chifumi[0][0] + ", 's' for " + chifumi[1][0] + " & 'd' for " + chifumi[2][0], "empty")
+        if nbrPlayer == 2:
+            question("The default key for player 2 is 'Left' for " + chifumi[0][0] + ", 'Down' for " + chifumi[1][0] + " & 'Right' for " + chifumi[2][0], "empty")
+        players = [
+            player(
+                question("Name of player " + str(i+1) + " ?", "input", "Player " + str(i+1))
+            )
+            for i in range(nbrPlayer)
+        ]
+        players[0].key = ["q","s","d"]
+    else:
+        players = [
+            player(
+                question("Name of player " + str(i+1) + " ?", "input", "Player " + str(i+1)),
+                [
+                    question("Press the key of " + chifumi[j][0] + " for the player " + str(i), "key")
+                    for j in range(len(chifumi))
+                ]
+            )
+            for i in range(nbrPlayer)
+        ]
 
-    # Définir reponse au retour de l'execution de la fonction input avec comme paramètre la concaténation de text et de reponsePossible
-    # Essayer:
-        # Définir reponse au retour de la fonction int avec comme paramètre reponse
-        # Définir check à Vrai
-    # Sinon:
-        # Définir reponse à ''
-
-    # Si length est supérieur à 0
-        # Alors:
-        # Définir check à l'assertion ou reponse n'est pas dans lengthList
+    Rounds = question("Numbers of rounds won to win the game (2 by default) :", "input int", 2)
+    lang = question(
+        "Choose the language of the result of a round", 
+        [
+            languages[i] + " (" + str(chifumi[0][i]) + " - " + str(chifumi[1][i]) + " - " + str(chifumi[2][i]) + ")"
+            for i in range(len(languages))
+        ]
+    )
+    if nbrPlayer == 1:
+        players.append(player("BOT", "botkey"))
     
-    # Tant que l'assertion check est Vrai
-        # Alors:
-        # Executer la fonction cls
+    return [players, Rounds, lang]
 
-        # Executer la fonction print avec comme paramètre la concaténation de "Erreur: Veuillez entrez une valeur entre 0 et " et de lengthStr
-        # Définir reponse au retour de l'execution de la fonction input avec comme paramètre la concaténation de text et de reponsePossible
-        # Essayer:
-            # Définir reponse au retour de la fonction int avec comme paramètre reponse
-            # Définir check à Vrai
-        # Sinon:
-            # Définir reponse à ''
+def gameplay(parameters):
+    players, Rounds, lang = parameters[0], parameters[1], parameters[2]
 
-        # Si length est supérieur à 0
-            # Alors:
-            # Définir check à l'assertion ou reponse n'est pas dans lengthList
-    
-    # Executer la fonction cls
-    # Retourner reponseJoueur
-
-# Définir la fonction play
-    # Définir chifumi à ["Pierre", "Feuille", "Ciseaux"]
-
-    # Définir pointsPlayerUn à 0
-    # Définir pointsPlayerDeux à 0
-
-    # Définir playWithABot au retour de l'execution de la fonction question avec comme paramètre "Voulez vous jouer avec un bot ?" et ["Non", "Oui"]
-    # Définir playerDeuxName à "Joueur 2"
-    # Si playWithABot est égal à 1
-        # Alors:
-        # Définir playerDeuxName à "Bot"
-
-    # Définir pointsMax au retour de l'execution de la fonction question avec comme paramètre "Combien faut-il de points pour gagné ?"
-
-    # Tant que pointsPlayerUn n'est pas égal à pointsMax et que pointsPlayerDeux n'est pas égal à pointsMax
-        # Alors:
-        # Si playWithABot est égal à 0
-            # Alors:
-            # Définir playerUnHasPlay au retour de l'execution de la fonction question avec comme paramètre "Joueur 1, vous pouvez jouer à l'abris de regard !" et chifumi
-            # Définir playerDeuxHasPlay au retour de l'execution de la fonction question avec comme paramètre "Joueur 2, vous pouvez jouer à l'abris de regard !" et chifumi
-        # Sinon:
-            # Définir playerUnHasPlay au retour de l'execution de la fonction question avec comme paramètre "Joueur 1, vous pouvez jouer !" et chifumi
-            # Definir playerDeuxHasPlay au retour de l'execution de la fonction randint avec comme paramètre 0 et 2
-
-        # Executer la fonction print avec comme paramètre la concaténation de "Joueur 1 à jouer " et de l'élément en index playerUnHasPlay dans la liste chifumi
-        # Executer la fonction print avec comme paramètre la concaténation de playerDeuxName, de " à jouer ", de l'élément en index playerDeuxHasPlay dans la liste chifumi, et de "\n"
-
-        # Si la formule ((playerUnHasPlay - 1) % 3) est égal à playerDeuxHasPlay
-            # Alors:
-            # Executer la fonction print avec comme paramètre "Joueur 1 gagne donc ce round"
-            # Incrémenter pointsPlayerUn à 1
-        # Sinon si la formule ((playerDeuxHasPlay - 1) % 3) est égal à playerUnHasPlay
-            # Alors:
-            # Executer la fonction print avec comme paramètre la concaténation de playerDeuxName, et de " gagne donc ce round"
-            # Incrémenter pointsPlayerDeux à 1
-        # Sinon:
-            # Executer la fonction print avec comme paramètre "On dirais bien que ce tour-ci, personne ne gagne"
-
-        # Executer la fonction print avec comme paramètre la concaténation de "\nLe Joueur 1 resort donc avec ", du retour de l'execution de la fonction str avec comme paramètre pointsPlayerUn, et de " points"
-        # Executer la fonction print avec comme paramètre la concaténation de "Et le ", de playerDeuxName, de " avec ", du retour de l'execution de la fonction str avec comme paramètre pointsPlayerDeux, et de " points"
+    while not(players[0].point==Rounds or players[1].point==Rounds):
+        for i in range(len(players)):
+            players[i].newround()
+        timer = time()
+        rebour = 5
+        while time()-timer < 5:
+            if not rebour == int(5 - (time()-timer)):
+                cls()
+                print("You can play")
+                print("Timer: " + str(rebour))
+                scoring(players, 2)
+            rebour = int(5 - (time()-timer))
+            for i in range(len(players)):
+                players[i].play()
         
-        # Executer la fonction sleep avec comme paramètre 3
+        cls()
+        for i in range(len(players)):
+            if players[i].round[-1] == -1:
+                print(str(players[i].name) + ": Miss to play")
+            else:
+                print(str(players[i].name) + ": " + chifumi[players[i].round[-1]][lang])
+        print("")
+        if players[0].round[-1] == -1 and not players[1].round[-1] == -1:
+            players[1].markpoint()
+        elif players[1].round[-1] == -1 and not players[0].round[-1] == -1:
+            players[0].markpoint()
+        elif (players[0].round[-1] - 1) % len(chifumi) == players[1].round[-1]:
+            players[0].markpoint()
+        elif (players[1].round[-1] - 1) % len(chifumi) == players[0].round[-1]:
+            players[1].markpoint()
+        else:
+            print("egality")
+        scoring(players, 4)
+        sleep(3)
     
-    # Si pointsPlayerUn est égal à pointsMax
-        # Alors:
-        # Executer la fonction print avec comme paramètre "Joueur 1 est désormais proclamer grand gagnant de cette partie de chifumi"
-    # Sinon:
-        # Executer la fonction print avec comme paramètre la concaténation de playerDeuxName, et de " est désormais proclamer grand gagnant de cette partie de chifumi"
+    cls()
+    for i in range(len(players)):
+        if players[i].point == Rounds:
+            print(players[i].name + " Win")
+    scoring(players, 1)
+    question("","empty noClear","")
+
+    for i in range(len(players)):
+        players[i].point = 0
+
+    return question("Play again ?", ["Yes", "Yes, but with other parameters", "No, back to the menu"])
+
+def scoring(players, lines):
+    for i in range(6 - lines):
+        print("")
+    for i in range(len(players)):
+        print(players[i].name + "'s score: " + str(players[i].point))
+
+class player:
+    def __init__(self, name, key=["gauche","bas","droite"]):
+        self.name = name
+        self.key = key
+        self.point = 0
+        self.round = [-1]
     
-    # Executer la fonction sleep avec comme paramètre 3
-    # Définir playAgain au retour de l'execution de la fonction question avec comme paramètre "Voulez vous rejouer ?" et ["Non", "Oui"]
+    def newround(self):
+        self.round.append(-1)
 
-    # Si playAgain est égal à 1
-        # Alors:
-        # Executer la fonction play
-    # Sinon:
-        # Executer la fonction print avec comme paramètre "Très bien, à bientôt\n"
+    def play(self):
+        if self.key == "botkey":
+            if self.round[-1] == -1:
+                self.round[-1] = randint(0,2)
+        else:
+            for i in range(len(self.key)):
+                if is_pressed(self.key[i]):
+                    self.round[-1] = i
+    
+    def markpoint(self):
+        self.point += 1
+        print(self.name + " have mark the point")
 
-### FIN
+cls()
