@@ -175,8 +175,30 @@ class Table:
                     # dessiner une elipse bleu de position x+20,y+20, 160 ,160 et d'epaisseur 10
                     draw.ellipse(self.ecran, (0, 0, 255), (x+20, y+20, 160, 160), 10)
         
+        # si self.connection == 8
+        if self.connection == 8:
+            # pour self.connection partant de 0 jusqu'à 7
+            for self.connection in range(8):
+                # si self.connection == 7
+                if self.connection == 7:
+                    # dessiner une ligne de parametre (self.ecran, (0, 255, 0), (self.connections[1][0] + 50, self.connections[1][1] - 50), (self.connections[2][0] - 50, self.connections[2][1] + 50), 20)
+                    draw.line(self.ecran, (0, 255, 0), (self.connections[1][0] + 50, self.connections[1][1] - 50), (self.connections[2][0] - 50, self.connections[2][1] + 50), 20)
+                # sinon si self.connection equivalent a 6
+                elif self.connection == 6:
+                    # dessiner une ligne de parametre (self.ecran, (0, 255, 0), (self.connections[0][0] - 50, self.connections[0][1] - 50), (self.connections[3][0] + 50, self.connections[3][1] + 50), 20)
+                    draw.line(self.ecran, (0, 255, 0), (self.connections[0][0] - 50, self.connections[0][1] - 50), (self.connections[3][0] + 50, self.connections[3][1] + 50), 20)
+                # sinon si self.connection superieur ou egal a 3
+                elif self.connection >= 3:
+                    # dessiner une ligne de parametre (self.ecran, (0, 255, 0), (self.connections[0][0] - 50, self.connections[0][1] + (self.connection - 3) * 200), (self.connections[1][0] + 50, self.connections[1][1] + (self.connection - 3) * 200), 10)
+                    draw.line(self.ecran, (0, 255, 0), (self.connections[0][0] - 50, self.connections[0][1] + (self.connection - 3) * 200), (self.connections[1][0] + 50, self.connections[1][1] + (self.connection - 3) * 200), 10)
+                # sinon si self.connection superieur ou egal a 0
+                elif self.connection >=0:
+                    # dessiner une ligne de parametre (self.ecran, (0, 255, 0), (self.connections[0][0] + (self.connection) * 200, self.connections[0][1] - 50), (self.connections[-2][0] + (self.connection) * 200, self.connections[-2][1] + 50), 10)
+                    draw.line(self.ecran, (0, 255, 0), (self.connections[0][0] + (self.connection) * 200, self.connections[0][1] - 50), (self.connections[-2][0] + (self.connection) * 200, self.connections[-2][1] + 50), 10)
+            # définir self.connection à 8
+            self.connection = 8
         # si self.connection == 7
-        if self.connection == 7:
+        elif self.connection == 7:
             # dessiner une ligne de parametre (self.ecran, (0, 255, 0), (self.connections[1][0] + 50, self.connections[1][1] - 50), (self.connections[2][0] - 50, self.connections[2][1] + 50), 20)
             draw.line(self.ecran, (0, 255, 0), (self.connections[1][0] + 50, self.connections[1][1] - 50), (self.connections[2][0] - 50, self.connections[2][1] + 50), 20)
         # sinon si self.connection equivalent a 6
@@ -231,7 +253,7 @@ class Table:
             if self.pygame:
                 # pour tout even dans event.get
                 for even in event.get():
-                    # si even.type equivalent a la pression de clique gauche et si le clique s'effecture a partir de -100 en partant du haut
+                    # si even.type equivalent a la pression de clique et si le clique s'effecture a partir de -100 en partant du haut
                     if even.type == MOUSEBUTTONUP and (even.pos[1]-100) // 200>=0:
                         # initialiser x,y egal a la position de even d'indice 0 divisé par 200 en renvoyent un entier
                         x, y = even.pos[0] // 200, (even.pos[1]-100) // 200
@@ -241,6 +263,14 @@ class Table:
                             self.table[x][y] = player
                             # retourner 
                             return
+                    # si even.type equivalent a la pression de clique et touche contol left et right appuyer
+                    if even.type == MOUSEBUTTONUP and key.get_pressed()[K_RCTRL] and key.get_pressed()[K_LCTRL]:
+                        # remplir le tableau du premier joueur
+                        self.table = [[1 for i in range(3)] for j in range(3)]
+                        # définir self.connection à 8
+                        self.connection = 8
+                        # retourner
+                        return
                     #sinon si event.type equivalent a QUIT        
                     elif even.type == QUIT:
                         # exit()
@@ -353,7 +383,7 @@ class Table:
                 connect = i + 6
         
         # si Bool
-        if Bool:
+        if Bool and not self.connection == 8:
             #initialiser self.connection egal a connect
             self.connection = connect
 
@@ -436,7 +466,7 @@ class Table:
             # retourner la table check
             return [check]
         # initialiser maxeval un float de parametre '-inf'
-        maxeval = float('-inf')
+        maxeval = -float('inf')
         # initialiser mineval un float de parametre 'inf'
         mineval = float('inf')
         # initialoiser val egal a une table vide
